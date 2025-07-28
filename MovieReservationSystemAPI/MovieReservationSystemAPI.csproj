@@ -22,12 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Base\Implementation\" />
-    <Folder Include="Base\Interface\" />
-    <Folder Include="Helpers\DTOs\" />
     <Folder Include="Helpers\Mapping\" />
-    <Folder Include="Services\Implementation\" />
-    <Folder Include="Services\Interface\" />
   </ItemGroup>
 
 </Project>

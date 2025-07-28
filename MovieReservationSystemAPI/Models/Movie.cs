@@ -8,5 +8,6 @@
         public string Describtion { get; set; }
         public string Duration { get; set; }
         public ICollection<MovieSchedule> movieSchedules { get; set; }
+        public ICollection<Theater> Theaters { get; set; }
     }
 }
