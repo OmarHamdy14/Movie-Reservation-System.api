@@ -1,37 +1,40 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MovieReservationSystemAPI.Helpers.DTOs.SeatDTOs;
 
 namespace MovieReservationSystemAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MovieController : ControllerBase
+    public class SeatController : ControllerBase
     {
-        private readonly IMovieService _movieService;
-        public MovieController(IMovieService movieService)
+        private readonly ISeatService _seatService;
+        public SeatController(ISeatService seatService)
         {
-            _movieService = movieService;
+            _seatService = seatService;
         }
         [HttpGet("GetById/{Id}")]
-        public async Task<IActionResult> GetById(Guid Id) // use include 
+        public async Task<IActionResult> GetById(Guid Id)
         {
             try
             {
-                var movie = await _movieService.GetById(Id);
-                if(movie == null) return NotFound();
-                return Ok(movie);
+                var seat = await _seatService.GetById(Id);
+                if (seat == null) return NotFound();
+                return Ok(seat);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { Message = "Something went wrong." });
             }
         }
-        [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("GetAllTheaterId/{TheaterId}")]
+        public async Task<IActionResult> GetAllTheaterId(Guid TheaterId)
         {
             try
             {
-                return Ok(await _movieService.GetAll());
+                var seats = await _seatService.GetAllByTheaterId(TheaterId);
+                if(!seats.Any()) return NotFound();
+                return Ok(seats);
             }
             catch (Exception ex)
             {
@@ -39,15 +42,14 @@ namespace MovieReservationSystemAPI.Controllers
             }
         }
         [HttpPost("Create")]
-        public async Task<IActionResult> Create([FromBody]CreateMovieDTO model)
+        public async Task<IActionResult> Create([FromBody] CreateSeatDTO model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    
-                    var movie = await _movieService.Create(model);
-                    return Ok(movie);
+                    var res = await _seatService.Create(model);
+                    return Ok(res);
                 }
                 return BadRequest(ModelState);
             }
@@ -57,18 +59,15 @@ namespace MovieReservationSystemAPI.Controllers
             }
         }
         [HttpPut("Update/{Id}")]
-        public async Task<IActionResult> Update(Guid Id, [FromBody] UpdateMovieDTO model)
+        public async Task<IActionResult> Update(Guid Id, [FromBody] UpdateSeatDTO model)
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    var movie = await _movieService.GetById(Id);
-                    if (movie == null) return NotFound();
-                    var res = await _movieService.Update(movie, model);
-                    return Ok(res);
-                }
-                return BadRequest(ModelState);
+                if(!ModelState.IsValid) return BadRequest(ModelState);
+                var seat = await _seatService.GetById(Id);
+                if(seat == null) return NotFound();
+                await _seatService.Update(seat, model);
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -80,14 +79,9 @@ namespace MovieReservationSystemAPI.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    var movie = await _movieService.GetById(Id);
-                    if (movie == null) return NotFound();
-                    await _movieService.Delete(movie);
-                    return Ok();
-                }
-                return BadRequest(ModelState);
+                var seat = await _seatService.GetById(Id);
+                if (seat == null) return NotFound();
+                return Ok();
             }
             catch (Exception ex)
             {

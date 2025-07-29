@@ -7,6 +7,6 @@
         public string Address { get; set; }
         public ICollection<Seat> Seats { get; set; }
         public ICollection<MovieSchedule> MovieSchedules { get; set; }
-        public ICollection<Ticket> Tickets { get; set; } 
+        //public ICollection<Ticket> Tickets { get; set; } 
     }
 }

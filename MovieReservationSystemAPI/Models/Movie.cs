@@ -7,7 +7,9 @@
         public string Category { get; set; }
         public string Describtion { get; set; }
         public string Duration { get; set; }
+        // rate ??
         public ICollection<MovieSchedule> movieSchedules { get; set; }
-        public ICollection<Theater> Theaters { get; set; }
+        //public ICollection<Theater> Theaters { get; set; }
+        public ICollection<MovieImage> movieImages { get; set; } // ?
     }
 }
