@@ -15,23 +15,23 @@ namespace MovieReservationSystemAPI.Services.Implementation
         }
         public async Task<Ticket> GetById(Guid Id)
         {
-            return await _base.Get(ms => ms.Id == Id);
+            return await _base.Get(ms => ms.Id == Id, "Seat,MovieSchedule,User,Theater");
         }
         public async Task<List<Ticket>> GetAllByUserId(string UserId)
         {
-            return await _base.GetAll(ms => ms.UserId == UserId);
+            return await _base.GetAll(ms => ms.UserId == UserId, "Seat,MovieSchedule,User,Theater");
         }
         public async Task<List<Ticket>> GetAllByTheaterId(Guid TheaterId)
         {
-            return await _base.GetAll(ms => ms.TheaterId == TheaterId);
+            return await _base.GetAll(ms => ms.TheaterId == TheaterId, "Seat,MovieSchedule,User,Theater");
         }
         public async Task<List<Ticket>> GetAllByMovieScheduleIdId(Guid MovieScheduleIdId)
         {
-            return await _base.GetAll(ms => ms.MovieScheduleId == MovieScheduleIdId);
+            return await _base.GetAll(ms => ms.MovieScheduleId == MovieScheduleIdId, "Seat,MovieSchedule,User,Theater");
         }
         public async Task<List<Ticket>> GetAllBySeatId(Guid SeatId)
         {
-            return await _base.GetAll(ms => ms.SeatId == SeatId);
+            return await _base.GetAll(ms => ms.SeatId == SeatId, "Seat,MovieSchedule,User,Theater");
         }
         public async Task<Ticket> Create(CreateTicketDTO model)
         {

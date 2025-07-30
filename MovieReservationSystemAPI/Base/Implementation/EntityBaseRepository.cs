@@ -24,7 +24,7 @@ namespace MovieReservationSystemAPI.Base.Implementation
 
             foreach (var property in IncludeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                query.Include(property);
+                query = query.Include(property);
             }
 
             return await query.FirstOrDefaultAsync();
@@ -36,7 +36,7 @@ namespace MovieReservationSystemAPI.Base.Implementation
 
             foreach (var property in IncludeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                query.Include(property);
+                query = query.Include(property);
             }
 
             return await query.ToListAsync();

@@ -14,15 +14,15 @@ namespace MovieReservationSystemAPI.Services.Implementation
         }
         public async Task<MovieSchedule> GetById(Guid Id)
         {
-            return await _base.Get(ms => ms.Id == Id);
+            return await _base.Get(ms => ms.Id == Id,"Movie,Theater");
         }
         public async Task<List<MovieSchedule>> GetAllByMovieId(Guid MovieId)
         {
-            return await _base.GetAll(ms => ms.MovieId == MovieId);
+            return await _base.GetAll(ms => ms.MovieId == MovieId, "Movie,Theater");
         }
         public async Task<List<MovieSchedule>> GetAllByTheaterId(Guid TheaterId)
         {
-            return await _base.GetAll(ms => ms.TheaterId == TheaterId);
+            return await _base.GetAll(ms => ms.TheaterId == TheaterId, "Movie,Theater");
         }
         public async Task<MovieSchedule> Create(CreateMovieScheduleDTO model)
         {

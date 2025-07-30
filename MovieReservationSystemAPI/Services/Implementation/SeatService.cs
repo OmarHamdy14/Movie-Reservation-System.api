@@ -15,11 +15,11 @@ namespace MovieReservationSystemAPI.Services.Implementation
         }
         public async Task<Seat> GetById(Guid Id)
         {
-            return await _base.Get(ms => ms.Id == Id);
+            return await _base.Get(ms => ms.Id == Id, "Theater,Tickets");
         }
         public async Task<List<Seat>> GetAllByTheaterId(Guid TheaterId)
         {
-            return await _base.GetAll(ms => ms.TheaterId == TheaterId);
+            return await _base.GetAll(ms => ms.TheaterId == TheaterId, "Theater,Tickets");
         }
         public async Task<Seat> Create(CreateSeatDTO model)
         {

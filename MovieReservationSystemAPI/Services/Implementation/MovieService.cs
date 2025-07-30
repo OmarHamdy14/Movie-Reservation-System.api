@@ -15,15 +15,15 @@ namespace MovieReservationSystemAPI.Services.Implementation
         }
         public async Task<Movie> GetById(Guid Id)
         {
-            return await _base.Get(ms => ms.Id == Id);
+            return await _base.Get(ms => ms.Id == Id, "movieSchedules,movieImages");
         }
         public async Task<List<Movie>> GetAll()
         {
-            return await _base.GetAll();
+            return await _base.GetAll(null,"movieSchedules,movieImages");
         }
         public async Task<Movie> Create(CreateMovieDTO model)
         {
-            var movie = new Movie()   // is this done using Mapper ???
+            /*var movie = new Movie()  
             {
                 Name = model.Name,
                 Category = model.Category,
@@ -35,7 +35,8 @@ namespace MovieReservationSystemAPI.Services.Implementation
                     MovieId = m.MovieId,
                     TheaterId = m.TheaterId
                 }).ToList()
-            };
+            };*/
+            var movie = _mapper.Map<Movie>(model);
             await _base.Create(movie);
             return movie;
         }
