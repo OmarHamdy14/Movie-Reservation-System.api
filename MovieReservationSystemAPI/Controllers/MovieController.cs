@@ -39,14 +39,14 @@ namespace MovieReservationSystemAPI.Controllers
             }
         }
         [HttpPost("Create")]
-        public async Task<IActionResult> Create([FromBody]CreateMovieDTO model)
+        public async Task<IActionResult> Create([FromBody]CreateMovieDTO model, [FromForm]IFormFile file)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     
-                    var movie = await _movieService.Create(model);
+                    var movie = await _movieService.Create(model,file);
                     return Ok(movie);
                 }
                 return BadRequest(ModelState);
@@ -57,7 +57,7 @@ namespace MovieReservationSystemAPI.Controllers
             }
         }
         [HttpPut("Update/{Id}")]
-        public async Task<IActionResult> Update(Guid Id, [FromBody] UpdateMovieDTO model)
+        public async Task<IActionResult> Update(Guid Id, [FromBody] UpdateMovieDTO model, [FromForm] IFormFile file)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace MovieReservationSystemAPI.Controllers
                 {
                     var movie = await _movieService.GetById(Id);
                     if (movie == null) return NotFound();
-                    var res = await _movieService.Update(movie, model);
+                    var res = await _movieService.Update(movie, model, file);
                     return Ok(res);
                 }
                 return BadRequest(ModelState);

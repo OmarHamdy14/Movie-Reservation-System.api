@@ -7,6 +7,6 @@
         public string Describtion { get; set; }
         public string Duration { get; set; }
         public ICollection<MovieSchedule> movieSchedules { get; set; } // ??
-        public ICollection<MovieImage> movieImages { get; set; }
+        public MovieImage movieImage { get; set; }
     }
 }

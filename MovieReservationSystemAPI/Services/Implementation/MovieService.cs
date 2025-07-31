@@ -7,11 +7,14 @@ namespace MovieReservationSystemAPI.Services.Implementation
     public class MovieService : IMovieService
     {
         private readonly IEntityBaseRepository<Movie> _base;
+        private readonly IEntityBaseRepository<MovieImage> _baseMovieImage;
+        private readonly ICloudinaryService _cloudinaryService;
         private readonly IMapper _mapper;
-        public MovieService(IEntityBaseRepository<Movie> @base, IMapper mapper)
+        public MovieService(IEntityBaseRepository<Movie> @base, IMapper mapper, ICloudinaryService cloudinaryService)
         {
             _base = @base;
             _mapper = mapper;
+            _cloudinaryService = cloudinaryService;
         }
         public async Task<Movie> GetById(Guid Id)
         {
@@ -21,7 +24,7 @@ namespace MovieReservationSystemAPI.Services.Implementation
         {
             return await _base.GetAll(null,"movieSchedules,movieImages");
         }
-        public async Task<Movie> Create(CreateMovieDTO model)
+        public async Task<Movie> Create(CreateMovieDTO model, IFormFile file)
         {
             /*var movie = new Movie()  
             {
@@ -38,9 +41,18 @@ namespace MovieReservationSystemAPI.Services.Implementation
             };*/
             var movie = _mapper.Map<Movie>(model);
             await _base.Create(movie);
+            var res = await _cloudinaryService.UploadFile(file);
+            var movieImage = new MovieImage()
+            {
+                MovieId = movie.Id,
+                ImageUrl = res.Url,
+                PublicId = res.PublicId,
+                Alternative = movie.Name
+            };
+            await _baseMovieImage.Create(movieImage);
             return movie;
         }
-        public async Task<Movie> Update(Movie Movie, UpdateMovieDTO model) // ?
+        public async Task<Movie> Update(Movie Movie, UpdateMovieDTO model, IFormFile file) // how to update photo if there is already a photo
         {
             _mapper.Map(Movie, model);
             await _base.Update(Movie);

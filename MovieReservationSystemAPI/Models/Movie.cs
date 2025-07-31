@@ -10,6 +10,6 @@
         // rate ??
         public ICollection<MovieSchedule> movieSchedules { get; set; }
         //public ICollection<Theater> Theaters { get; set; }
-        public ICollection<MovieImage> movieImages { get; set; } // ?
+        public MovieImage movieImages { get; set; } // ?
     }
 }

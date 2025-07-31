@@ -66,7 +66,7 @@ namespace MovieReservationSystemAPI.Controllers
         }
         [Authorize]
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] RegisterUserDTO model)
+        public async Task<IActionResult> Register([FromBody] RegisterationDTO model)
         {
             try
             {
@@ -133,5 +133,4 @@ namespace MovieReservationSystemAPI.Controllers
             }
         }
     }
-}
 }

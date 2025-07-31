@@ -6,8 +6,8 @@ namespace MovieReservationSystemAPI.Services.Interface
     {
         Task<Movie> GetById(Guid Id);
         Task<List<Movie>> GetAll();
-        Task<Movie> Create(CreateMovieDTO model);
-        Task<Movie> Update(Movie Movie, UpdateMovieDTO model);
+        Task<Movie> Create(CreateMovieDTO model, IFormFile file);
+        Task<Movie> Update(Movie Movie, UpdateMovieDTO model, IFormFile file);
         Task Delete(Movie Movie);
     }
 }

@@ -84,50 +84,50 @@ namespace MovieReservationSystemAPI.Controllers
                 return StatusCode(500, new { Message = "Something went wrong." });
             }
         }
-    }
-    [HttpPost("Create")]
-    public async Task<IActionResult> Create([FromBody] CreateTicketDTO model)
-    {
-        try
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] CreateTicketDTO model)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var res = await _ticketService.Create(model);
-            return Ok(res);
+            try
+            {
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+                var res = await _ticketService.Create(model);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Something went wrong." });
+            }
         }
-        catch (Exception ex)
+        [HttpPut("Update/{Id}")]
+        public async Task<IActionResult> Update(Guid Id, [FromBody] UpdateTicketDTO model)
         {
-            return StatusCode(500, new { Message = "Something went wrong." });
+            try
+            {
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+                var ticket = await _ticketService.GetById(Id);
+                if (ticket == null) return NotFound();
+                var res = await _ticketService.Update(ticket,model);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Something went wrong." });
+            }
         }
-    }
-    [HttpPut("Update/{Id}")]
-    public async Task<IActionResult> Update(Guid Id, [FromBody] UpdateTicketDTO model)
-    {
-        try
+        [HttpDelete("Delete/{Id}")]
+        public async Task<IActionResult> Delete(Guid Id)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var ticket = await _ticketService.GetById(Id);
-            if (ticket == null) return NotFound();
-            var res = await _ticketService.Update(ticket,model);
-            return Ok(res);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { Message = "Something went wrong." });
-        }
-    }
-    [HttpDelete("Delete/{Id}")]
-    public async Task<IActionResult> Delete(Guid Id)
-    {
-        try
-        {
-            var ticket = await _ticketService.GetById(Id);
-            if (ticket == null) return NotFound();
-            await _ticketService.Delete(ticket);
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { Message = "Something went wrong." });
+            try
+            {
+                var ticket = await _ticketService.GetById(Id);
+                if (ticket == null) return NotFound();
+                await _ticketService.Delete(ticket);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Something went wrong." });
+            }
         }
     }
 }

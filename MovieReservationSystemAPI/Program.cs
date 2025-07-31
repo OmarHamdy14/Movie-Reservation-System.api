@@ -1,4 +1,6 @@
 
+using Microsoft.Extensions.DependencyInjection;
+using MovieReservationSystemAPI.Helpers.Cloudinary;
 using System.Text;
 
 namespace MovieReservationSystemAPI
@@ -31,6 +33,7 @@ namespace MovieReservationSystemAPI
             builder.Services.AddAutoMapper(typeof(Program));
 
             builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
+            builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
 
             builder.Services.AddAuthentication(op =>
             {
@@ -52,6 +55,7 @@ namespace MovieReservationSystemAPI
                 };
 
             });
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
