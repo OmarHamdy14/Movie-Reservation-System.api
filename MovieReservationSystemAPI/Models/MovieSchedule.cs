@@ -8,7 +8,7 @@
         public Guid TheaterId { get; set; }
         public Movie Movie { get; set; }
         public Theater Theater { get; set; }
+        public ICollection<Seat> Seats { get; set; }  
         //public ICollection<Ticket> Tickets { get; set; }  
-
     }
 }

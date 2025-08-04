@@ -6,6 +6,7 @@ namespace MovieReservationSystemAPI.Services.Interface
     {
         Task<Seat> GetById(Guid Id);
         Task<List<Seat>> GetAllByTheaterId(Guid TheaterId);
+        Task<bool> LockSeat(Seat seat);
         Task<Seat> Create(CreateSeatDTO model);
         Task<Seat> Update(Seat Seat, UpdateSeatDTO model);
         Task Delete(Seat Seat);

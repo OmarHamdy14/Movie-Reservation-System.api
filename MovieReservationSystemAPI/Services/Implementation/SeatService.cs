@@ -21,6 +21,21 @@ namespace MovieReservationSystemAPI.Services.Implementation
         {
             return await _base.GetAll(ms => ms.TheaterId == TheaterId, "Theater,Tickets");
         }
+        public async Task<bool> LockSeat(Seat seat)
+        {
+            if (seat.IsBooked || seat.Lock > DateTime.UtcNow) return false;
+            seat.Lock = DateTime.UtcNow.AddMinutes(5);
+            await _base.Update(seat);
+            return true;
+        }
+        public async Task<bool> BookSeat(Seat seat)
+        {
+            if(seat.IsBooked || seat.Lock < DateTime.UtcNow) return false;
+            seat.IsBooked = true;
+            seat.Lock = null;
+            await _base.Update(seat);
+            return true;
+        }
         public async Task<Seat> Create(CreateSeatDTO model)
         {
             var Seat = _mapper.Map<Seat>(model);

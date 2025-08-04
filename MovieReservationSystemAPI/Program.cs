@@ -1,5 +1,6 @@
 
 using Microsoft.Extensions.DependencyInjection;
+using MovieReservationSystemAPI.Background_Services;
 using MovieReservationSystemAPI.Helpers.Cloudinary;
 using System.Text;
 
@@ -55,6 +56,9 @@ namespace MovieReservationSystemAPI
                 };
 
             });
+
+
+            builder.Services.AddHostedService<SeatExpiredLocksCleanService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

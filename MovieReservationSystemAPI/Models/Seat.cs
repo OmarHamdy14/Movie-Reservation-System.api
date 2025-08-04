@@ -1,4 +1,6 @@
-﻿namespace MovieReservationSystemAPI.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MovieReservationSystemAPI.Models
 {
     public class Seat
     {
@@ -6,8 +8,16 @@
         //public int TheaterNum { get; set; }
         public int SeatNum { get; set; }
         public string Type { get; set; }
+        public  Guid MovieScheduleId { get; set; }
         public Guid TheaterId { get; set; }
         public Theater Theater { get; set; }
-        public ICollection<Ticket> Tickets { get; set; } // ??
+        public MovieSchedule MovieSchedule { get; set; }
+        public bool IsBooked { get; set; }
+        public DateTime? Lock { get; set; }
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
+
+
+        // public ICollection<Ticket> Tickets { get; set; } // ??
     }
 }
