@@ -2,7 +2,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using MovieReservationSystemAPI.Background_Services;
 using MovieReservationSystemAPI.Helpers.Cloudinary;
+using MovieReservationSystemAPI.Stripe;
+using Stripe;
 using System.Text;
+using AccountService = MovieReservationSystemAPI.Services.Implementation.AccountService;
 
 namespace MovieReservationSystemAPI
 {
@@ -59,6 +62,10 @@ namespace MovieReservationSystemAPI
 
 
             builder.Services.AddHostedService<SeatExpiredLocksCleanService>();
+
+
+            builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+            StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

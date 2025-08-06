@@ -11,4 +11,4 @@ global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.IdentityModel.Tokens;
 global using MovieReservationSystemAPI.Base.Implementation;
 global using MovieReservationSystemAPI.Helpers;
-// signalR  - Stripe - Reservation technique - DataAnnotations - Index
+// Stripe - DataAnnotations - Index - Discounts&Promotions&Coupons 

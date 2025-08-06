@@ -14,5 +14,6 @@
         public DbSet<Theater> Theaters { get; set; }
         public DbSet<Seat> Seats { get; set; }
         public DbSet<MovieImage> movieImages { get; set; }
+        public DbSet<SeatPrice> SeatPrices { get; set; }
     }
 }

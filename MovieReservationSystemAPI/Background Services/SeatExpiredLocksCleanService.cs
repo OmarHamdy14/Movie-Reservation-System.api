@@ -15,8 +15,8 @@
                 using var scope = _scopeFactory.CreateScope();
                 var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-                var expiredLocks = await context.Seats
-                    .Where(s => s.Lock < DateTime.UtcNow)
+                var expiredLocks = await context.Tickets
+                    .Where(t => t.Lock < DateTime.UtcNow)
                     .ToListAsync();
 
                 foreach (var seat in expiredLocks)
