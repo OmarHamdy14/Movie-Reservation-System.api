@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
+using MovieReservationSystemAPI.Helpers.DTOs.BookingDTOs;
 using MovieReservationSystemAPI.Helpers.DTOs.TicketDTOs;
-using MovieReservationSystemAPI.Models;
 using Stripe;
-using Stripe.BillingPortal;
+using Stripe.Checkout;
 
 namespace MovieReservationSystemAPI.Controllers
 {
@@ -50,20 +48,6 @@ namespace MovieReservationSystemAPI.Controllers
                 return StatusCode(500, new { Message = "Something went wrong." });
             }
         }
-        /*[HttpGet("GetAllByTheaterId/{TheaterId}")]
-        public async Task<IActionResult> GetAllByTheaterId(Guid TheaterId)
-        {
-            try
-            {
-                var tickets = await _ticketService.GetAllByTheaterId(TheaterId);
-                if (!tickets.Any()) return NotFound();
-                return Ok(tickets);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { Message = "Something went wrong." });
-            }
-        }*/
         [HttpGet("GetAllByMovieScheduleIdId/{MovieScheduleIdId}")]
         public async Task<IActionResult> GetAllByMovieScheduleIdId(Guid MovieScheduleIdId)
         {
@@ -92,7 +76,22 @@ namespace MovieReservationSystemAPI.Controllers
                 return StatusCode(500, new { Message = "Something went wrong." });
             }
         }
-        [HttpPost]
+        [HttpPost("CreateCheckoutSession")]
+        public async Task<IActionResult> CreateCheckoutSession([FromBody]BookingRequestDTO model)
+        {
+            try
+            {
+                if(!ModelState.IsValid) return BadRequest(ModelState);
+                var res = await _ticketService.CreateCheckoutSession(model);
+                if (res.IsSuccess) return Ok(new {Message = res.Msg});
+                else return BadRequest (new {Message = res.Msg});   
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Something went wrong." });
+            }
+        }
+        [HttpPost("StripeWebhook")]
         public async Task<IActionResult> StripeWebhook()
         {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
@@ -102,18 +101,28 @@ namespace MovieReservationSystemAPI.Controllers
             {
                 var stripeEvent = EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"], stripeSecret);
 
-                if (stripeEvent.Type == Events.CheckoutSessionCompleted)
+                if (stripeEvent.Type == "checkout.session.completed")
                 {
                     var session = stripeEvent.Data.Object as Session;
-                    var ticketId = int.Parse(HttpContext.Request.Query["ticketId"]);
+                    var ticketIdString = HttpContext.Request.Query["ticketId"];
+
+                    if (!Guid.TryParse(ticketIdString, out Guid ticketId))
+                    {
+                        return BadRequest("Invalid ticket ID.");
+                    }
 
                     var ticket = await _ticketService.GetById(ticketId);
+
+                    if (ticket == null)
+                    {
+                        return NotFound("Ticket not found.");
+                    }
 
                     if (ticket != null && !ticket.IsBooked)
                     {
                         ticket.IsBooked = true;
                         ticket.Lock = null;
-                        await _ticketService.Update(ticket);
+                        await _ticketService.SimpleUpdate(ticket);
 
                         await _hubContext.Clients.Group($"MovieSchedule-{ticket.MovieScheduleId}")
                             .SendAsync("TicketBooked", new { TicketId = ticket.Id });
@@ -127,8 +136,20 @@ namespace MovieReservationSystemAPI.Controllers
                 return BadRequest();
             }
         }
-        
-        
+        [HttpPost("cancel-booking")]
+        public async Task<IActionResult> CancelBooking([FromBody] CancelBookingDTO model)
+        {
+            try
+            {
+                var res = await _ticketService.CancelBooking(model);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Something went wrong." });
+            }
+        }
+
         /*
         [HttpPut("LockTicket/{TicketId}")]
         public async Task<IActionResult> LockTicket(Guid TicketId)

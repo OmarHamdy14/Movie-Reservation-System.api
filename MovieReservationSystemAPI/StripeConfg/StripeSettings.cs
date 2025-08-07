@@ -1,4 +1,4 @@
-﻿namespace MovieReservationSystemAPI.Stripe
+﻿namespace MovieReservationSystemAPI.StripeConfg
 {
     public class StripeSettings
     {

@@ -11,4 +11,4 @@ global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.IdentityModel.Tokens;
 global using MovieReservationSystemAPI.Base.Implementation;
 global using MovieReservationSystemAPI.Helpers;
-// Stripe - DataAnnotations - Index - Discounts&Promotions&Coupons 
+// Index - Discounts&Promotions&Coupons - Admin Role - delete ticket after movie tmie is not existed 

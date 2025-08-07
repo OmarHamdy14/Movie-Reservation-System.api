@@ -1,12 +1,19 @@
-﻿namespace MovieReservationSystemAPI.Helpers.DTOs.MovieDTOs
+﻿using MovieReservationSystemAPI.Helpers.Enums;
+using System.ComponentModel.DataAnnotations;
+
+namespace MovieReservationSystemAPI.Helpers.DTOs.MovieDTOs
 {
     public class CreateMovieDTO
     {
+        [Required]
         public string Name { get; set; }
-        public string Category { get; set; }
-        public string Describtion { get; set; }
-        public string Duration { get; set; }
-        public ICollection<MovieSchedule> movieSchedules { get; set; } // ??
-        public MovieImage movieImage { get; set; }
+        [Required]
+        public MovieCategory Category { get; set; }
+        [Required]
+        public string Description { get; set; }
+        [Required]
+        public TimeSpan Duration { get; set; }
+        //public ICollection<MovieSchedule> movieSchedules { get; set; } // ??
+        //public MovieImage movieImage { get; set; }
     }
 }

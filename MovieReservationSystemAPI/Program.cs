@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using MovieReservationSystemAPI.Background_Services;
 using MovieReservationSystemAPI.Helpers.Cloudinary;
-using MovieReservationSystemAPI.Stripe;
+using MovieReservationSystemAPI.StripeConfg;
 using Stripe;
 using System.Text;
 using AccountService = MovieReservationSystemAPI.Services.Implementation.AccountService;

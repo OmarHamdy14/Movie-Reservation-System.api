@@ -7,6 +7,9 @@ using MovieReservationSystemAPI.Helpers.DTOs.TicketDTOs;
 using MovieReservationSystemAPI.SignalR;
 using Stripe.BillingPortal;
 using Stripe.Checkout;
+using Session = Stripe.Checkout.Session;
+using SessionCreateOptions = Stripe.Checkout.SessionCreateOptions;
+using SessionService = Stripe.Checkout.SessionService;
 
 namespace MovieReservationSystemAPI.Services.Implementation
 {
@@ -45,14 +48,14 @@ namespace MovieReservationSystemAPI.Services.Implementation
         }
         public async Task<CreateCheckoutSessionResponse> CreateCheckoutSession(BookingRequestDTO model)
         {
-            var ticket = await _base.Get(s => s.Id == model.SeatId && s.MovieScheduleId == model.MovieScheduleId);
+            var ticket = await _base.Get(s => s.Id == model.TicketId && s.MovieScheduleId == model.MovieScheduleId);
 
             if (ticket == null || ticket.IsBooked || (ticket.Lock.HasValue && ticket.Lock > DateTime.UtcNow))
                 return new CreateCheckoutSessionResponse() { IsSuccess=false, Msg="Ticket is unavailable"};
 
             ticket.Lock = DateTime.UtcNow.AddMinutes(5);
             await _base.Update(ticket);
-            var seat = await _baseSeat.Get(s => s.Id == model.SeatId);
+            var seat = await _baseSeat.Get(s => s.Id == ticket.SeatId);
 
             var options = new SessionCreateOptions
             {
@@ -64,18 +67,18 @@ namespace MovieReservationSystemAPI.Services.Implementation
                         PriceData = new SessionLineItemPriceDataOptions
                         {
                             Currency = "usd",
-                            UnitAmount = 1200,
+                            UnitAmount = (long)ticket.PricePaid*100,
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
-                                Name = $"Seat {seat.SeatNum} for Movie"
+                                Name = $"Seat { seat.SeatNum } for Movie"
                             },
                         },
                         Quantity = 1,
                     }
                  },
                 Mode = "payment",
-                SuccessUrl = $"https://yourdomain.com/booking/success?session_id={{CHECKOUT_SESSION_ID}}&seatId={seat.Id}",
-                CancelUrl = $"https://yourdomain.com/booking/cancel?seatId={seat.Id}",
+                SuccessUrl = $"https://yourdomain.com/booking/success?session_id={{CHECKOUT_SESSION_ID}}&ticketId={ticket.Id}",
+                CancelUrl = $"https://yourdomain.com/booking/cancel?seatId={ticket.Id}",
             };
 
             var service = new SessionService();
@@ -83,7 +86,17 @@ namespace MovieReservationSystemAPI.Services.Implementation
 
             return new CreateCheckoutSessionResponse() { IsSuccess=true, sessionId = session.Id, url = session.Url };
         }
-        
+        public async Task<SimpleResponseDTO> CancelBooking(CancelBookingDTO model)
+        {
+            var ticket = await _base.Get(t => t.Id == model.TicketId);
+            if(ticket != null && !ticket.IsBooked)
+            {
+                ticket.Lock = null;
+                await _base.Update(ticket);
+                return new SimpleResponseDTO() { IsSuccess = true };
+            }
+            return new SimpleResponseDTO() { IsSuccess = false, Message = "ticket is not found or not booked" };
+        }
         /*
         public async Task<bool> LockTicket(Ticket ticket)
         {
@@ -112,6 +125,11 @@ namespace MovieReservationSystemAPI.Services.Implementation
         {
             var Ticket = _mapper.Map<Ticket>(model);
             await _base.Create(Ticket);
+            return Ticket;
+        }
+        public async Task<Ticket> SimpleUpdate(Ticket Ticket)
+        {
+            await _base.Update(Ticket);
             return Ticket;
         }
         public async Task<Ticket> Update(Ticket Ticket, UpdateTicketDTO model)

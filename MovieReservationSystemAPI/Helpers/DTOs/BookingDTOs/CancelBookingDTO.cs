@@ -2,11 +2,9 @@
 
 namespace MovieReservationSystemAPI.Helpers.DTOs.BookingDTOs
 {
-    public class BookingRequestDTO
+    public class CancelBookingDTO
     {
         [Required]
         public Guid TicketId { get; set; }
-        [Required]
-        public Guid MovieScheduleId { get; set; }
     }
 }
