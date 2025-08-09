@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MovieReservationSystemAPI.Background_Services;
 using MovieReservationSystemAPI.Helpers.Cloudinary;
 using MovieReservationSystemAPI.StripeConfg;
+using Serilog;
 using Stripe;
 using System.Text;
 using AccountService = MovieReservationSystemAPI.Services.Implementation.AccountService;
@@ -36,6 +37,14 @@ namespace MovieReservationSystemAPI
 
             builder.Services.AddAutoMapper(typeof(Program));
 
+            Log.Logger = new LoggerConfiguration()
+                            .MinimumLevel.Debug()
+                            .WriteTo.Console()
+                            .WriteTo.File("Logs/MovieSchedule-log.txt", rollingInterval: RollingInterval.Day)
+                            .Enrich.FromLogContext()
+                            .CreateLogger();
+
+            builder.Host.UseSerilog();
             builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
 
@@ -81,6 +90,7 @@ namespace MovieReservationSystemAPI
                 app.UseSwaggerUI();
             }
 
+            app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
