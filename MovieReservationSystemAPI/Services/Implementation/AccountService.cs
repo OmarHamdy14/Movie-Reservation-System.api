@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MovieReservationSystemAPI.Helpers;
 using MovieReservationSystemAPI.Helpers.DTOs.AccountDTOs;
@@ -13,11 +14,11 @@ namespace MovieReservationSystemAPI.Services.Implementation
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
         private readonly JWT _jwt;
-        public AccountService(UserManager<ApplicationUser> userManager, IMapper mapper, JWT jwt)
+        public AccountService(UserManager<ApplicationUser> userManager, IMapper mapper, IOptions<JWT> jwt)
         {
             _userManager = userManager;
             _mapper = mapper;
-            _jwt = jwt;
+            _jwt = jwt.Value;
         }
         public async Task<ApplicationUser> FindById(string userId)
         {

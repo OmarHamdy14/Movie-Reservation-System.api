@@ -10,11 +10,12 @@ namespace MovieReservationSystemAPI.Services.Implementation
         private readonly IEntityBaseRepository<MovieImage> _baseMovieImage;
         private readonly ICloudinaryService _cloudinaryService;
         private readonly IMapper _mapper;
-        public MovieService(IEntityBaseRepository<Movie> @base, IMapper mapper, ICloudinaryService cloudinaryService)
+        public MovieService(IEntityBaseRepository<Movie> @base, IMapper mapper, ICloudinaryService cloudinaryService, IEntityBaseRepository<MovieImage> baseMovieImage)
         {
             _base = @base;
             _mapper = mapper;
             _cloudinaryService = cloudinaryService;
+            _baseMovieImage = baseMovieImage;
         }
         public async Task<Movie> GetById(Guid Id)
         {

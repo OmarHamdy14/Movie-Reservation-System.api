@@ -21,6 +21,7 @@ namespace MovieReservationSystemAPI
             builder.Services.AddIdentity<ApplicationUser,IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
 
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
             builder.Services.AddScoped<IMovieScheduleService, MovieScheduleService>();
             builder.Services.AddScoped<IMovieService, MovieService>();
             builder.Services.AddScoped<IMovieImageService, MovieImageService>();
@@ -34,6 +35,7 @@ namespace MovieReservationSystemAPI
             builder.Services.AddScoped<IEntityBaseRepository<Seat>, EntityBaseRepository<Seat>>();
             builder.Services.AddScoped<IEntityBaseRepository<Theater>, EntityBaseRepository<Theater>>();
             builder.Services.AddScoped<IEntityBaseRepository<Ticket>, EntityBaseRepository<Ticket>>();
+            builder.Services.AddScoped<IEntityBaseRepository<SeatPrice>, EntityBaseRepository<SeatPrice>>();
 
             builder.Services.AddAutoMapper(typeof(Program));
 
@@ -94,7 +96,7 @@ namespace MovieReservationSystemAPI
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
+            app.UseAuthentication();
 
             app.MapControllers();
 

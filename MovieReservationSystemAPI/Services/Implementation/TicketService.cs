@@ -15,15 +15,15 @@ namespace MovieReservationSystemAPI.Services.Implementation
 {
     public class TicketService : ITicketService
     {
-        private readonly IHubContext<BookingHub> _hubContext;
+        //private readonly IHubContext<BookingHub> _hubContext;
         private readonly IEntityBaseRepository<Ticket> _base;
         private readonly IEntityBaseRepository<Seat> _baseSeat;
         private readonly IMapper _mapper;
-        public TicketService(IEntityBaseRepository<Ticket> @base, IMapper mapper, IHubContext<BookingHub> hubContext, IEntityBaseRepository<Seat> baseSeat)
+        public TicketService(IEntityBaseRepository<Ticket> @base, IMapper mapper/*, IHubContext<BookingHub> hubContext*/, IEntityBaseRepository<Seat> baseSeat)
         {
             _base = @base;
             _mapper = mapper;
-            _hubContext = hubContext;
+            //_hubContext = hubContext;
             _baseSeat = baseSeat;
         }
         public async Task<Ticket> GetById(Guid Id)
